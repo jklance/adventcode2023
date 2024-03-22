@@ -34,13 +34,20 @@ func getLastIntFromString(line string) string {
 
 func transformTextNumeralsToInts(line string) string {
 	// Replace written numerals with integer versions
-	// TODO: resolve the oneight problem (should return one and eight)
-	// TODO: remove oneight from the end of the data file
-	replacer := strings.NewReplacer("one", "1one", "two", "2two", "three", "3three", "four", "4four", "five", "5five", "six", "6six", "seven", "7seven", "eight", "8eight", "nine", "9nine")
-	newLine := replacer.Replace(line)
-	// fmt.Println(newLine)
+	// This is some absolutely hack shit, but it works to solve the oneight and eightwo problem
+	// (it would be better to just run once over the string and populate a new thing with the digits, but done is done)
+	line = strings.Replace(line, "one", "one1one", -1)
+	line = strings.Replace(line, "two", "two2two", -1)
+	line = strings.Replace(line, "three", "three3three", -1)
+	line = strings.Replace(line, "four", "four4four", -1)
+	line = strings.Replace(line, "five", "five5five", -1)
+	line = strings.Replace(line, "six", "six6six", -1)
+	line = strings.Replace(line, "seven", "seven7seven", -1)
+	line = strings.Replace(line, "eight", "eight8eight", -1)
+	line = strings.Replace(line, "nine", "nine9nine", -1)
+	
 
-	return (newLine)
+	return (line)
 }
 
 func getCalibrationPairFromLine(line string) string	{
