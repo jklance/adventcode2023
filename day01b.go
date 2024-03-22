@@ -32,10 +32,23 @@ func getLastIntFromString(line string) string {
 	return (lastInt)
 }
 
-func getCalibrationPairFromLine(line string) string{
-	// Calibration Pair is first int and last int in a string
+func transformTextNumeralsToInts(line string) string {
+	// Replace written numerals with integer versions
+	// TODO: resolve the oneight problem (should return one and eight)
+	// TODO: remove oneight from the end of the data file
+	replacer := strings.NewReplacer("one", "1one", "two", "2two", "three", "3three", "four", "4four", "five", "5five", "six", "6six", "seven", "7seven", "eight", "8eight", "nine", "9nine")
+	newLine := replacer.Replace(line)
+	// fmt.Println(newLine)
+
+	return (newLine)
+}
+
+func getCalibrationPairFromLine(line string) string	{
+	// Calibration Pair is first int and last int in a string even if the int is spelled out
+	newLine := transformTextNumeralsToInts(line)
+
 	re := regexp.MustCompile(`\d+`)
-	vals := re.FindAllString(line, -1)
+	vals := re.FindAllString(newLine, -1)
 
 	first := getFirstIntFromString(vals[0])
 	last := getLastIntFromString(vals[len(vals) - 1])
@@ -59,6 +72,7 @@ func getCalibrationValueFromLine(line string) int64 {
 
 func main() {
 	// Combine the first and last digit from each line to form a value, get running total of all
+	// Digits can be written in text as `one`, `two`, etc
 	var inData []byte = getData()
 	inDataSplit := strings.Split(string(inData), "\n")
 
@@ -68,7 +82,7 @@ func main() {
 			var calibrationVal int64 = getCalibrationValueFromLine(line)
 			
 			runningTotal += calibrationVal
-			// fmt.Println(line, " ", calibrationVal, " ", runningTotal)
+			fmt.Println(line, " ", calibrationVal, " ", runningTotal)
 
 	}
 	fmt.Println("Calibration Value: ", runningTotal)
